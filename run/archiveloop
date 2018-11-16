@@ -204,7 +204,22 @@ function disconnect_usb_drives_from_host () {
 
 function archive_teslacam_clips () {
   log "Starting..."
-  systemctl start archive_clips
+
+  /root/bin/connect-archive.sh
+
+  disconnect_usb_drives_from_host
+
+  ensure_cam_file_is_mounted
+
+  fix_errors_in_cam_file
+
+  /root/bin/archive-clips.sh
+
+  /root/bin/disconnect-archive.sh
+
+  unmount_cam_file
+
+  connect_usb_drives_to_host
 }
 
 function archive_clips () {
@@ -228,11 +243,6 @@ function truncate_log () {
   fi
 }
 
-export -f disconnect_usb_drives_from_host
-export -f ensure_cam_file_is_mounted
-export -f fix_errors_in_cam_file
-export -f unmount_cam_file
-export -f connect_usb_drives_to_host
 export -f mount_mountpoint
 export -f ensure_mountpoint_is_mounted
 export -f retry

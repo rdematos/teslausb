@@ -141,11 +141,14 @@ function configure_systemd_services () {
     local install_path="$1"
 
     sed -i -e "s@INSTALLPATH@$install_path@g" -e "s/ARCHIVESERVER/$archiveserver/g" $install_path/archiveloop.service
-    sed -i -e "s@INSTALLPATH@$install_path@g" -e "s/ARCHIVESERVER/$archiveserver/g" $install_path/etc/systemd/system/archive_clips.service
+    sed -i -e "s@INSTALLPATH@$install_path@g" -e "s/ARCHIVESERVER/$archiveserver/g" $install_path/archive_clips.service
 
 
-    cp $install_path/archiveloop.service /etc/systemd/system/archiveloop@.service
+    cp $install_path/archiveloop.service /etc/systemd/system/archiveloop.service
     cp $install_path/archive_clips.service /etc/systemd/system/
+    chmod -x /etc/systemd/system/archiveloop.service
+    chmod -x /etc/systemd/system/archive_clips_.service
+    
     
     systemctl daemon-reload
 

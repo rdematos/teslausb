@@ -1,5 +1,23 @@
 #!/bin/bash -e
 
+export LOG_FILE=/mutable/archiveloop.log
+
+export CAM_MOUNT=/mnt/cam
+export MUSIC_MOUNT=/mnt/music
+export ARCHIVE_MOUNT=/mnt/archive
+
+function log () {
+  echo "$( date )" >> "$LOG_FILE"
+  echo "$1" >> "$LOG_FILE"
+}
+
+function disconnect_usb_drives_from_host () {
+  log "Disconnecting usb from host..."
+  modprobe -r g_mass_storage
+  log "Disconnected usb from host."
+}
+
+
 function archive_teslacam_clips () {
   log "Starting..."
 
@@ -20,3 +38,5 @@ function archive_teslacam_clips () {
   connect_usb_drives_to_host
 
 }
+
+archive_teslacam_clips
