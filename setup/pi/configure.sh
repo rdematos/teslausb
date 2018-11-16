@@ -49,6 +49,7 @@ function log () {
 }
 
 log "Launching archival script..."
+systemctl enable archiveloop@
 systemctl start archiveloop@"$archiveserver" 
 log "All done"
 exit 0
