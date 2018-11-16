@@ -147,7 +147,7 @@ function configure_systemd_services () {
     cp $install_path/archiveloop.service /etc/systemd/system/archiveloop.service
     cp $install_path/archive_clips.service /etc/systemd/system/
     chmod -x /etc/systemd/system/archiveloop.service
-    chmod -x /etc/systemd/system/archive_clips_.service
+    chmod -x /etc/systemd/system/archive_clips.service
     
     
     systemctl daemon-reload
