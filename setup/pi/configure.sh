@@ -49,8 +49,8 @@ function log () {
 }
 
 log "Launching archival script..."
-systemctl enable archiveloop@
-systemctl start archiveloop@"$archiveserver" 
+systemctl enable archiveloop
+systemctl start archiveloop
 log "All done"
 exit 0
 EOF
@@ -117,8 +117,10 @@ function install_archive_scripts () {
 
     echo "Installing base archive scripts into $install_path"
     get_script $install_path archiveloop run
+    get_script $install_path archive_clips_service run
     get_script $install_path remountfs_rw run
-    get_script $install_path lookup-ip-address.sh run
+    get_script $install_path lookup-ip-address.sh 
+    
 
     echo "Installing archive module scripts"
     get_script $install_path verify-archive-configuration.sh $archive_module
@@ -138,10 +140,13 @@ function configure_systemd_services () {
 
     local install_path="$1"
 
-    cp $install_path/archiveloop.service /etc/systemd/service/archiveloop@.service
-    cp $install_path/archive_clips.service /etc/systemd/service/
-    sed -i'.bak' -e "s/INSTALLPATH/$install_path/g" /etc/systemd/service/archiveloop@.service
-    sed -i'.bak' -e "s/INSTALLPATH/$install_path/g" /etc/systemd/service/archive_clips.service
+    sed -i -e "s@INSTALLPATH@$install_path@g" -e "s/ARCHIVESERVER/$archiveserver/g" $install_path/archiveloop.service
+    sed -i -e "s@INSTALLPATH@$install_path@g" -e "s/ARCHIVESERVER/$archiveserver/g" $install_path/etc/systemd/system/archive_clips.service
+
+
+    cp $install_path/archiveloop.service /etc/systemd/system/archiveloop@.service
+    cp $install_path/archive_clips.service /etc/systemd/system/
+    
     systemctl daemon-reload
 
 

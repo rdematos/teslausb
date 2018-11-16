@@ -3,11 +3,10 @@ Description=TeslaUSB archive loop
 After=network.target
 
 [Service]
-Environment="SCRIPT_ARGS=%I"
-ExecStart=INSTALLPATH/archiveloop $SCRIPT_ARGS
+Environment=ARCHIVE_SERVER=ARCHIVESERVER
+ExecStart=/root/bin/archiveloop $ARCHIVE_SERVER
 Type=simple
 TimeoutStopSec=infinity
-
 
 [Install]
 WantedBy=default.target

@@ -5,9 +5,7 @@ After=network.target
 [Service]
 Type=oneshot
 TimeoutStopSec=infinity
-ExecStart=INSTALLPATH/archive_clips
-
-
+ExecStart=INSTALLPATH/archive_clips_service
 
 [Install]
 WantedBy=default.target
