@@ -49,7 +49,7 @@ function log () {
 }
 
 log "Launching archival script..."
-"$install_home"/archiveloop "$archiveserver" &
+systemctl start archiveloop@"$archiveserver" 
 log "All done"
 exit 0
 EOF
@@ -127,8 +127,24 @@ function install_archive_scripts () {
     get_script $install_path disconnect-archive.sh $archive_module
     get_script $install_path write-archive-configs-to.sh $archive_module
     get_script $install_path archive-is-reachable.sh $archive_module
+
+    get_script $install_path archiveloop.service run
+    get_script $install_path archive_clips.service run
+
 }
 
+function configure_systemd_services () {
+
+    local install_path="$1"
+
+    cp $install_path/archiveloop.service /etc/systemd/service/archiveloop@.service
+    cp $install_path/archive_clips.service /etc/systemd/service/
+    sed -i'.bak' -e "s/INSTALLPATH/$install_path/g" /etc/systemd/service/archiveloop@.service
+    sed -i'.bak' -e "s/INSTALLPATH/$install_path/g" /etc/systemd/service/archive_clips.service
+    systemctl daemon-reload
+
+
+}
 function check_pushover_configuration () {
     if [ ! -z "${pushover_enabled+x}" ]
     then
@@ -200,6 +216,8 @@ echo "Using archive module: $archive_module"
 install_archive_scripts $INSTALL_DIR $archive_module
 "$INSTALL_DIR"/verify-archive-configuration.sh
 "$INSTALL_DIR"/configure-archive.sh
+ 
+configure_systemd_services "$INSTALL_DIR"
 
 install_rc_local "$INSTALL_DIR"
 

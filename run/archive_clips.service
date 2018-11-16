@@ -1,0 +1,13 @@
+[Unit]
+Description=TeslaUSB archive clips
+After=network.target
+
+[Service]
+Type=oneshot
+TimeoutStopSec=infinity
+ExecStart=INSTALLPATH/archive_clips
+
+
+
+[Install]
+WantedBy=default.target
