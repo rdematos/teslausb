@@ -196,6 +196,7 @@ function make_root_fs_readonly () {
 function update_package_index () {
   setup_progress "Updating package index files..."
   apt-get update
+  apt-get install -y btrfs-tools
 }
 
 function upgrade_packages () {
