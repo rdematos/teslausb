@@ -41,5 +41,7 @@ mkfs.btrfs -f -L backingfiles /dev/mmcblk0p3
 mkfs.btrfs -f -L mutable /dev/mmcblk0p4
 
 cp /etc/fstab /etc/fstab.orig
-echo "/dev/mmcblk0p3 $BACKINGFILES_MOUNTPOINT btrfs auto,rw,noatime 0 2" >> /etc/fstab
-echo "/dev/mmcblk0p4 $MUTABLE_MOUNTPOINT btrfs auto,rw 0 2" >> /etc/fstab
+echo "LABEL=backingfiles /backingfiles btrfs defaults,ssd_spread,noatime,noauto 0 0" >> /etc/fstab
+echo "LABEL=mutable /mutable btrfs defaults,ssd_spread,noatime,noauto 0 0" >> /etc/fstab
+# echo "/dev/mmcblk0p3 $BACKINGFILES_MOUNTPOINT btrfs auto,rw,noatime 0 2" >> /etc/fstab
+# echo "/dev/mmcblk0p4 $MUTABLE_MOUNTPOINT btrfs auto,rw 0 2" >> /etc/fstab
