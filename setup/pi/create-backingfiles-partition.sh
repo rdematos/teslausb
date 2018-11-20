@@ -24,9 +24,9 @@ export NEW_START_PERCENTAGE="$(( $USED_PERCENTAGE + 1 ))"
 
 # Per the googles, percentages will align optimal, within an acceptable margin
 setup_progress "Modifying partition table for backing files partition..."
-parted  -s -m /dev/mmcblk0 mkpart primary ext4 $NEW_START_PERCENTAGE% 85%
+parted  -s -m /dev/mmcblk0 mkpart primary btrfs $NEW_START_PERCENTAGE% 85%
 setup_progress "Modifying partition table for mutable partition..."
-parted  -s -m /dev/mmcblk0 mkpart primary ext4 86% 100% 
+parted  -s -m /dev/mmcblk0 mkpart primary btrfs 86% 100% 
 
 ORIGINAL_DISK_IDENTIFIER=$( fdisk -l /dev/mmcblk0 | grep -e "^Disk identifier" | sed "s/Disk identifier: 0x//" )
 
