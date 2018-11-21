@@ -42,5 +42,7 @@ then
 else
   echo "options g_mass_storage file=$CAM_DISK_FILE_NAME removable=1 ro=0 stall=0 iSerialNumber=123456" > "$G_MASS_STORAGE_CONF_FILE_NAME"
 fi
+# I know this is messy for now, will functionize later
+echo "/backingfiles/snap/cam_disk.bin /mnt/cam_snap vfat noauto,users,umask=000 0 0" >> /etc/fstab
 mkdir -p /mnt/cam_snap
 create_teslacam_directory
