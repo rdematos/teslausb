@@ -3,9 +3,10 @@ ARCHIVE_HOST_NAME="$1"
 
 export LOG_FILE=/mutable/archiveloop.log
 
-export CAM_MOUNT=/backingfiles/camsnap
+export CAM_MOUNT=/mnt/cam
 export MUSIC_MOUNT=/mnt/music
 export ARCHIVE_MOUNT=/mnt/archive
+export CAM_SNAP_MOUNT=/mnt/cam_snap
 
 function log () {
   echo "$( date )" >> "$LOG_FILE"
@@ -132,6 +133,12 @@ function ensure_cam_file_is_mounted () {
   log "Ensured cam file is mounted."
 }
 
+function ensure_cam_snap_file_is_mounted () {
+  log "Ensuring cam snap file is mounted..."
+  ensure_mountpoint_is_mounted_with_retry "$CAM_SNAP_MOUNT"
+  log "Ensured cam snap file is mounted."
+}
+
 function ensure_music_file_is_mounted () {
   log "Ensuring music backing file is mounted..."
   ensure_mountpoint_is_mounted_with_retry "$MUSIC_MOUNT"
@@ -147,6 +154,10 @@ function unmount_mount_point () {
 
 function unmount_cam_file () {
   unmount_mount_point "$CAM_MOUNT"
+}
+
+function unmount_cam_snap_file () {
+  unmount_mount_point "$CAM_SNAP_MOUNT"
 }
 
 function unmount_music_file () {
@@ -207,19 +218,34 @@ function archive_teslacam_clips () {
 
   /root/bin/connect-archive.sh
 
+  #RG# Since we fix the files on script start, and use snapshot, don't disconnect
   #disconnect_usb_drives_from_host
 
+  #RG# take readonly snapshot to read from
+  log "Taking read-only snapshot of /backingfiles to /backingfiles/snap.."
+  btrfs subv snapshot -r /backingfiles /backingfiles/snap
+  
+  #RG# mount the snapshot instead
   #ensure_cam_file_is_mounted
+  ensure_cam_snap_file_is_mounted
 
+  #RG#
+  # errors should be fixed on script start;
+  # I don't think we should worry about scenarios where there's a constant
+  # cycling between archive available and not 
   #fix_errors_in_cam_file
 
   /root/bin/archive-clips.sh
 
   /root/bin/disconnect-archive.sh
 
-  unmount_cam_file
+  #RG# Unmount the snapshot file instead
+  #unmount_cam_file
+  unmount_cam_snap_file
+  log "Removing snapshot of /backingfiles..."
+  btrfs subv delete /backingfiles/snap
 
-  connect_usb_drives_to_host
+  #connect_usb_drives_to_host
 }
 
 function archive_clips () {
@@ -251,18 +277,28 @@ export -f log
 
 log "Starting..."
 
+#RG# always fix on boot/start, to take logic out of messing with it later
+mount_and_fix_errors_in_files
+connect_usb_drives_to_host
+
+
 if archive_is_reachable
 then
   # archive_clips will fix errors in the cam file
-  mount_and_fix_errors_in_music_file
+  #RG# files should be fixed at boot
+  #mount_and_fix_errors_in_music_file
 
   archive_clips
 
   wait_for_archive_to_be_unreachable
 else
-  mount_and_fix_errors_in_files
-
-  connect_usb_drives_to_host
+  #RG#
+  #mount_and_fix_errors_in_files
+  
+  log "Archive isn't reachable, starting wait loop"
+  
+  #RG# never disconnected 
+  #connect_usb_drives_to_host
 fi
 
 while [ true ]

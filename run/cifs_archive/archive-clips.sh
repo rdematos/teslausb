@@ -4,11 +4,11 @@ log "Moving clips to archive..."
 
 NUM_FILES_MOVED=0
 
-for file_name in "$CAM_MOUNT"/TeslaCam/saved*; do
+for file_name in "$CAM_SNAP_MOUNT"/TeslaCam/saved*; do
   [ -e "$file_name" ] || continue
   log "Moving $file_name ..."
   
-  if mv -f -t "$ARCHIVE_MOUNT" -- "$file_name" >> "$LOG_FILE" 2>&1
+  if cp -f -t "$ARCHIVE_MOUNT" -- "$file_name" >> "$LOG_FILE" 2>&1
   then
     log "Moved $file_name."
     NUM_FILES_MOVED=$((NUM_FILES_MOVED + 1))
