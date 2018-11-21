@@ -196,17 +196,17 @@ function make_root_fs_readonly () {
 function update_package_index () {
   setup_progress "Updating package index files..."
   apt-get update
-  apt-mark hold raspberrypi-kernel raspberrypi-bootloader
   apt-get install -y btrfs-tools
 }
 
 function update_initramfs() {
   echo "btrfs" >> /etc/initramfs-tools/modules
   update-initramfs -c -k `uname -r`
-  
+
 }
 
 function upgrade_packages () {
+    apt-mark hold raspberrypi-kernel raspberrypi-bootloader
   if [ "$UPGRADE_PACKAGES" = true ]
   then
     setup_progress "Upgrading installed packages..."
@@ -264,6 +264,8 @@ then
 fi
 
 make_root_fs_readonly
+
+update_initramfs
 
 upgrade_packages
 
