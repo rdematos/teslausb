@@ -202,6 +202,7 @@ function update_package_index () {
 function update_initramfs() {
   echo "btrfs" >> /etc/initramfs-tools/modules
   update-initramfs -c -k `uname -r`
+  echo "initramfs initrd.img-4.14.79+ followkernel" >> /boot/config.txt
 
 }
 
@@ -263,9 +264,11 @@ then
   /root/configure.sh
 fi
 
+#update_initramfs
+
 make_root_fs_readonly
 
-update_initramfs
+
 
 upgrade_packages
 
