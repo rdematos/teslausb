@@ -3,7 +3,7 @@ ARCHIVE_HOST_NAME="$1"
 
 export LOG_FILE=/mutable/archiveloop.log
 
-export CAM_MOUNT=/mnt/cam
+export CAM_MOUNT=/backingfiles/camsnap
 export MUSIC_MOUNT=/mnt/music
 export ARCHIVE_MOUNT=/mnt/archive
 
@@ -207,11 +207,11 @@ function archive_teslacam_clips () {
 
   /root/bin/connect-archive.sh
 
-  disconnect_usb_drives_from_host
+  #disconnect_usb_drives_from_host
 
-  ensure_cam_file_is_mounted
+  #ensure_cam_file_is_mounted
 
-  fix_errors_in_cam_file
+  #fix_errors_in_cam_file
 
   /root/bin/archive-clips.sh
 
