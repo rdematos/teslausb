@@ -34,7 +34,7 @@ for file_name in "$CAM_SNAP_MOUNT"/TeslaCam/saved*; do
     then
      copy_file
     else
-      log "File $file_name alrea"
+      log "File $file_name already exists, not copying."
     fi
   else
     # The file didn't exist in the target so just copy away
