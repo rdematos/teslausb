@@ -282,7 +282,6 @@ mount_and_fix_errors_in_files
 connect_usb_drives_to_host
 
 log "Removing any existing snapshot of /backingfiles..."
-unmount_cam_snap_file
 if [ -d /backingfiles/snap ]
 then
   btrfs subv delete -c /backingfiles/snap
