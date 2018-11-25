@@ -199,12 +199,6 @@ function update_package_index () {
   apt-get install -y btrfs-tools
 }
 
-function update_initramfs() {
-  echo "btrfs" >> /etc/initramfs-tools/modules
-  update-initramfs -c -k `uname -r`
-  echo "initramfs initrd.img-4.14.79+ followkernel" >> /boot/config.txt
-
-}
 
 function upgrade_packages () {
     apt-mark hold raspberrypi-kernel raspberrypi-bootloader
@@ -264,11 +258,7 @@ then
   /root/configure.sh
 fi
 
-#update_initramfs
-
 make_root_fs_readonly
-
-
 
 upgrade_packages
 
